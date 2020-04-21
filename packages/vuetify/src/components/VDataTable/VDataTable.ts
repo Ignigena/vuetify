@@ -56,7 +56,7 @@ function searchTableItems (
   }
 
   if (headersWithCustomFilters.length) {
-    filtered = filtered.filter(item => headersWithCustomFilters.every(filterFn(item, search, defaultFilter)))
+    filtered = filtered.concat(items.filter(item => headersWithCustomFilters.every(filterFn(item, search, defaultFilter))))
   }
 
   return filtered

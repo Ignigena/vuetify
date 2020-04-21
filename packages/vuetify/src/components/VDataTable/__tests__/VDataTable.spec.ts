@@ -494,6 +494,38 @@ describe('VDataTable.ts', () => {
     expect(wrapper.html()).toMatchSnapshot()
   })
 
+  it('should search column with custom filter', async () => {
+    const wrapper = mountFunction({
+      propsData: {
+        items: testItems,
+        headers: [
+          {
+            text: 'Dessert (100g serving)',
+            align: 'left',
+            filter: (value, search) => {
+              if (!search) return true
+              return value === search
+            }
+            value: 'name',
+          },
+          { text: 'Calories', value: 'calories' },
+          { text: 'Fat (g)', value: 'fat' },
+          { text: 'Carbs (g)', value: 'carbs' },
+          { text: 'Protein (g)', value: 'protein' },
+          { text: 'Iron (%)', value: 'iron' },
+        ],
+      },
+    })
+
+    wrapper.setProps({ search: 'eclair' })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.internalCurrentItems.length).toBe(0)
+
+    wrapper.setProps({ search: 'Eclair' })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.internalCurrentItems.length).toBe(1)
+  })
+
   // https://github.com/vuetifyjs/vuetify/issues/8359
   it('should limit page to current page count if not using server-items-length', async () => {
     const wrapper = mountFunction({
